@@ -1,16 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import aboutVideo from '../assets/ab.mp4';
+import mePhoto from '../assets/me.jpeg';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const stats = [
-  { num: '1+',  label: 'Years Industry Experience' },
-  { num: '30+', label: 'Projects Built'             },
-  { num: '2+',  label: 'Years Academic Experience'  },
-  { num: '∞',   label: 'Lines of Code'              },
-];
+
 
 const codeLines = [
   { indent: 0, text: 'const mahesh = {',                       color: 'var(--text)'       },
@@ -22,89 +17,73 @@ const codeLines = [
 ];
 
 export default function About() {
-  const sectionRef   = useRef(null);
-  const videoRef     = useRef(null);
-  const visualRef    = useRef(null);
-  const statsRef     = useRef(null);
-  const codeRef      = useRef(null);
-  const cvRef        = useRef(null);
-  const labelRef     = useRef(null);
-  const analyzerRef  = useRef(null);
+  const sectionRef  = useRef(null);
+  const labelRef    = useRef(null);
+  const photoColRef = useRef(null);
+  const rightColRef = useRef(null);
+  const bioRef      = useRef(null);
+  const codeRef     = useRef(null);
+  const cvRef       = useRef(null);
+  const imgRef      = useRef(null);
 
-  const [hasRevealed, setHasRevealed] = useState(false);
-  const [percent, setPercent] = useState(0);
-
-  /* ── Section header scroll-trigger ── */
   useEffect(() => {
     const ctx = gsap.context(() => {
+
+      /* ── Header fade-in ── */
       gsap.fromTo(labelRef.current,
         { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 78%' } }
       );
+
+      /* ── Photo column: slide in from left ── */
+      gsap.fromTo(photoColRef.current,
+        { x: -60, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' } }
+      );
+
+      /* ── Subtle floating animation on the photo frame ── */
+      gsap.to(imgRef.current, {
+        y: -10,
+        duration: 3.5,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+        scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' }
+      });
+
+      /* ── Right column: slide in from right ── */
+      gsap.fromTo(rightColRef.current,
+        { x: 60, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.15,
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' } }
+      );
+
+      /* ── Code block stagger ── */
+      gsap.fromTo(codeRef.current,
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 68%' } }
+      );
+
+      /* ── Bio description fade-in ── */
+      gsap.fromTo(bioRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.75, ease: 'power2.out',
+          scrollTrigger: { trigger: bioRef.current, start: 'top 88%' } }
+      );
+
+      /* ── CV button pop ── */
+      gsap.fromTo(cvRef.current,
+        { scale: 0.88, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.55, ease: 'back.out(1.6)',
+          scrollTrigger: { trigger: cvRef.current, start: 'top 92%' } }
+      );
+
     }, sectionRef);
     return () => ctx.revert();
   }, []);
-
-  /* ── Drive the Decryption percentage loading counter in sync with the video ── */
-  useEffect(() => {
-    const vid = videoRef.current;
-    if (!vid) return;
-
-    const handleTimeUpdate = () => {
-      if (vid.duration) {
-        const pct = Math.min(Math.floor((vid.currentTime / vid.duration) * 100), 100);
-        setPercent(pct);
-      }
-    };
-
-    vid.addEventListener('timeupdate', handleTimeUpdate);
-    return () => vid.removeEventListener('timeupdate', handleTimeUpdate);
-  }, []);
-
-  /* ── GSAP Reveal Transition once video ends ── */
-  const revealVisual = () => {
-    if (hasRevealed) return;
-    setHasRevealed(true);
-
-    const tl = gsap.timeline();
-
-    // 1. Hide the analyzer layout cleanly
-    tl.to(analyzerRef.current, {
-      opacity: 0,
-      y: -10,
-      duration: 0.4,
-      ease: 'power2.out',
-      onComplete: () => {
-        if (analyzerRef.current) analyzerRef.current.style.display = 'none';
-      }
-    })
-    // 2. Reveal the active Visual Column components smoothly
-    .fromTo(visualRef.current,
-      { display: 'flex', opacity: 0, y: 15 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-    )
-    .fromTo(codeRef.current,
-      { y: -20, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' },
-      '-=0.4'
-    )
-    .fromTo(statsRef.current.children,
-      { y: 25, opacity: 0 },
-      { y: 0, opacity: 1, stagger: 0.08, duration: 0.5, ease: 'power2.out' },
-      '-=0.3'
-    )
-    .fromTo(cvRef.current,
-      { scale: 0.92, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.5)' },
-      '-=0.15'
-    );
-  };
-
-  const handleVideoEnded = () => {
-    setPercent(100);
-    revealVisual();
-  };
 
   return (
     <section id="about" ref={sectionRef} className="about-section">
@@ -119,102 +98,79 @@ export default function About() {
 
       <div className="about-inner">
 
-        {/* ── LEFT: Modern Video Player (Symmetric Height matching Right column) ── */}
-        <div className="about-video-col">
-          <div className="modern-video-wrapper">
-            <video
-              ref={videoRef}
-              className="about-video"
-              autoPlay
-              muted
-              playsInline
-              onEnded={handleVideoEnded}
-            >
-              <source src={aboutVideo} type="video/mp4" />
-            </video>
-            {/* Subtle glow border accent */}
-            <div className="video-border-accent" />
+        {/* ── LEFT: Photo Column ── */}
+        <div ref={photoColRef} className="about-photo-col" style={{ opacity: 0 }}>
+          <div ref={imgRef} className="photo-frame-wrapper">
+            {/* Decorative corner accents */}
+            <span className="corner-accent corner-tl" />
+            <span className="corner-accent corner-tr" />
+            <span className="corner-accent corner-bl" />
+            <span className="corner-accent corner-br" />
+
+            {/* Glow ring */}
+            <div className="photo-glow-ring" />
+
+            {/* The photo */}
+            <div className="photo-clip">
+              <img
+                src={mePhoto}
+                alt="Mahesh Hansaka"
+                className="about-photo"
+              />
+              {/* Subtle gradient overlay at bottom */}
+              <div className="photo-overlay" />
+            </div>
+
+            {/* Bottom badge */}
+            <div className="photo-badge mono">
+              <span className="badge-dot" />
+              AVAILABLE FOR HIRE
+            </div>
           </div>
         </div>
 
-        {/* ── RIGHT: Visual Column Area ── */}
-        <div className="about-right-panel">
+        {/* ── RIGHT: Info Column ── */}
+        <div ref={rightColRef} className="about-right-panel" style={{ opacity: 0 }}>
 
-          {/* 1. FUTURISTIC ANALYZER PLACEHOLDER (Shows while video plays) */}
-          {!hasRevealed && (
-            <div ref={analyzerRef} className="retro-analyzer">
-              <div className="analyzer-header mono">
-                <span className="blink-dot" />
-                <span>SYSTEM DIAGNOSTIC IN PROGRESS</span>
-              </div>
-              
-              <div className="analyzer-body">
-                {/* Rolling Matrix-style Loading stats */}
-                <div className="analyzer-row mono">
-                  <span className="label">DECRYPTING CODES :</span>
-                  <span className="value progress-text">{percent}% SECURE</span>
-                </div>
-                <div className="analyzer-progress-bar">
-                  <div className="analyzer-progress-fill" style={{ width: `${percent}%` }} />
-                </div>
-
-                {/* Cybernetic scanning terminal logs */}
-                <div className="terminal-logs mono">
-                  <div>&gt; CONNECTING TO MAHESH_CORE... SUCCESS</div>
-                  <div>&gt; FETCHING SOURCE REPOSITORIES... {percent > 30 ? 'OK' : 'PENDING'}</div>
-                  <div>&gt; INJECTING MACHINE LEARNING AGENTS... {percent > 65 ? 'OK' : 'PENDING'}</div>
-                  <div>&gt; COMPILING FULL-STACK DESIGN ARCHITECTURE... {percent > 85 ? 'OK' : 'PENDING'}</div>
-                  {percent === 100 && <div style={{ color: 'var(--green)' }}>&gt; SUCCESS: DATA DECRYPTION COMPLETE!</div>}
-                </div>
-              </div>
-
-              {/* Laser scanning line moving down across the card */}
-              <div className="laser-scanning-line" />
-            </div>
-          )}
-
-          {/* 2. REAL ACTIVE VISUAL COLUMN (Revealed on Video Completion) */}
-          <div
-            ref={visualRef}
-            className="about-visual-col"
-            style={{ display: 'none', opacity: 0 }}
-          >
-            {/* Code block */}
-            <div ref={codeRef} className="code-block">
-              <div className="code-dots">
-                {['#ff5f57','#ffbd2e','#28c840'].map(c => (
-                  <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c }} />
-                ))}
-              </div>
-              <div style={{ marginTop: 20 }}>
-                {codeLines.map((line, i) => (
-                  <p key={i} className="mono" style={{ fontSize: 13, color: line.color, lineHeight: 2, paddingLeft: line.indent * 20 }}>
-                    {line.text}
-                  </p>
-                ))}
-              </div>
-              <div style={{ position: 'absolute', bottom: -8, right: -8, width: 40, height: 40, border: '2px solid var(--green)', zIndex: -1 }} />
-              <div style={{ position: 'absolute', top: -8, left: -8, width: 20, height: 20, background: 'var(--green)', zIndex: -1 }} />
-            </div>
-
-            {/* Stats grid */}
-            <div ref={statsRef} className="stats-grid">
-              {stats.map((s, i) => (
-                <div key={i} className="stat-cell">
-                  <p className="display" style={{ fontSize: 44, color: 'var(--green)', lineHeight: 1 }}>{s.num}</p>
-                  <p className="mono" style={{ fontSize: 9, color: 'var(--text-muted)', letterSpacing: 2, textTransform: 'uppercase', marginTop: 4 }}>{s.label}</p>
-                </div>
+          {/* Code block */}
+          <div ref={codeRef} className="code-block">
+            <div className="code-dots">
+              {['#ff5f57','#ffbd2e','#28c840'].map(c => (
+                <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c }} />
               ))}
             </div>
-
-            {/* Download CV button */}
-            <div ref={cvRef} style={{ marginTop: 24 }}>
-              <a href="/resume.pdf" target="_blank" className="cv-btn"
-                onMouseEnter={e => { e.target.style.background = 'var(--green)'; e.target.style.color = 'var(--dark)'; }}
-                onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = 'var(--green)'; }}>
-                Download CV ↓
-              </a>
+            <div style={{ marginTop: 20 }}>
+              {codeLines.map((line, i) => (
+                <p key={i} className="mono" style={{ fontSize: 13, color: line.color, lineHeight: 2, paddingLeft: line.indent * 20 }}>
+                  {line.text}
+                </p>
+              ))}
             </div>
+            <div style={{ position: 'absolute', bottom: -8, right: -8, width: 40, height: 40, border: '2px solid var(--green)', zIndex: -1 }} />
+            <div style={{ position: 'absolute', top: -8, left: -8, width: 20, height: 20, background: 'var(--green)', zIndex: -1 }} />
+          </div>
+
+          {/* Bio description */}
+          <div ref={bioRef} className="about-bio" style={{ opacity: 0 }}>
+            <p className="bio-text">
+              I'm a <span className="bio-highlight">Full Stack Developer & ML enthusiast</span> based in Sri Lanka,
+              passionate about crafting performant, production-grade applications that sit at the intersection
+              of clean engineering and thoughtful design.
+            </p>
+            <p className="bio-text" style={{ marginTop: 12 }}>
+              With hands-on experience across <span className="bio-highlight">React, Node.js, Python &amp; AWS</span>,
+              I build everything from scalable REST APIs to intelligent ML pipelines — always with an eye for
+              detail and a drive to ship code that actually matters.
+            </p>
+          </div>
+
+          {/* Download CV button */}
+          <div ref={cvRef} style={{ marginTop: 24, opacity: 0 }}>
+            <a href="/resume.pdf" target="_blank" className="cv-btn"
+              onMouseEnter={e => { e.target.style.background = 'var(--green)'; e.target.style.color = 'var(--dark)'; }}
+              onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = 'var(--green)'; }}>
+              Download CV ↓
+            </a>
           </div>
 
         </div>
@@ -232,157 +188,142 @@ export default function About() {
           display: flex; align-items: center; justify-content: space-between;
         }
 
-        /* ─── Grid (Both Sides Balanced & Aligned) ─── */
+        /* ─── Grid ─── */
         .about-inner {
           max-width: 1200px; margin: 0 auto;
-          display: grid; grid-template-columns: 1.1fr 1fr;
-          gap: 64px; align-items: stretch; /* Aligns left and right heights symmetrically */
+          display: grid; grid-template-columns: 1fr 1.1fr;
+          gap: 72px; align-items: center;
         }
 
-        /* ─── Modern Symmetric Video column ─── */
-        .about-video-col {
+        /* ─── Photo Column ─── */
+        .about-photo-col {
           display: flex;
-          align-items: center;
-          width: 100%;
-        }
-        .modern-video-wrapper {
-          position: relative;
-          border: 1px solid var(--border);
-          background: #000;
-          overflow: hidden;
-          width: 100%;
-          height: 480px; /* Perfectly aligns with right panel height for symmetry */
-          border-radius: 4px;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-          transition: border-color 0.35s ease, box-shadow 0.35s ease;
-        }
-        .modern-video-wrapper:hover {
-          border-color: rgba(0, 255, 136, 0.3);
-          box-shadow: 0 20px 45px rgba(0, 255, 136, 0.08);
-        }
-        .about-video {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-        .video-border-accent {
-          position: absolute;
-          inset: 0;
-          border: 1px solid transparent;
-          pointer-events: none;
-          z-index: 2;
-          transition: border-color 0.3s ease;
-        }
-        .modern-video-wrapper:hover .video-border-accent {
-          border-color: rgba(0, 255, 136, 0.1);
-        }
-
-        /* ─── Right Panel Area ─── */
-        .about-right-panel {
-          position: relative;
-          display: flex;
-          flex-direction: column;
           justify-content: center;
-          min-height: 480px;
+          align-items: center;
         }
 
-        /* ─── Futuristic Diagnostic Analyzer (Ux Placeholder) ─── */
-        .retro-analyzer {
+        .photo-frame-wrapper {
           position: relative;
-          border: 1px solid var(--border);
-          border-radius: 4px;
-          background: var(--surface);
-          padding: 32px;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+          width: 100%;
+          max-width: 400px;
+          user-select: none;
         }
-        .analyzer-header {
+
+        /* Corner bracket accents */
+        .corner-accent {
+          position: absolute;
+          width: 22px; height: 22px;
+          border-color: var(--green);
+          border-style: solid;
+          z-index: 2;
+          opacity: 0.7;
+          transition: opacity 0.3s;
+        }
+        .photo-frame-wrapper:hover .corner-accent { opacity: 1; }
+        .corner-tl { top: -8px; left: -8px; border-width: 2px 0 0 2px; }
+        .corner-tr { top: -8px; right: -8px; border-width: 2px 2px 0 0; }
+        .corner-bl { bottom: -8px; left: -8px; border-width: 0 0 2px 2px; }
+        .corner-br { bottom: -8px; right: -8px; border-width: 0 2px 2px 0; }
+
+        /* Ambient glow ring behind photo */
+        .photo-glow-ring {
+          position: absolute;
+          inset: -20px;
+          border-radius: 4px;
+          background: radial-gradient(ellipse at center,
+            rgba(0,255,136,0.07) 0%,
+            transparent 70%);
+          z-index: 0;
+          pointer-events: none;
+          transition: background 0.4s;
+        }
+        .photo-frame-wrapper:hover .photo-glow-ring {
+          background: radial-gradient(ellipse at center,
+            rgba(0,255,136,0.13) 0%,
+            transparent 70%);
+        }
+
+        /* Photo clip & image */
+        .photo-clip {
+          position: relative;
+          overflow: hidden;
+          border-radius: 4px;
+          border: 1px solid var(--border);
+          z-index: 1;
+          transition: border-color 0.35s;
+          box-shadow:
+            0 24px 60px rgba(0,0,0,0.5),
+            0 0 0 1px rgba(0,255,136,0.06);
+        }
+        .photo-frame-wrapper:hover .photo-clip {
+          border-color: rgba(0,255,136,0.35);
+          box-shadow:
+            0 28px 70px rgba(0,0,0,0.6),
+            0 0 40px rgba(0,255,136,0.08);
+        }
+        .about-photo {
+          display: block;
+          width: 100%;
+          height: 480px;
+          object-fit: cover;
+          object-position: center top;
+          filter: grayscale(20%) contrast(1.05);
+          transition: filter 0.5s ease, transform 0.6s ease;
+        }
+        .photo-frame-wrapper:hover .about-photo {
+          filter: grayscale(0%) contrast(1.08);
+          transform: scale(1.03);
+        }
+
+        /* Gradient overlay at bottom */
+        .photo-overlay {
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          height: 120px;
+          background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+          pointer-events: none;
+        }
+
+        /* Available badge */
+        .photo-badge {
+          position: absolute;
+          bottom: -14px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: var(--dark);
+          border: 1px solid var(--green);
+          color: var(--green);
+          font-size: 10px;
+          letter-spacing: 2.5px;
+          padding: 7px 18px;
           display: flex;
           align-items: center;
-          gap: 10px;
-          font-size: 11px;
-          letter-spacing: 2px;
-          color: var(--text-muted);
+          gap: 8px;
+          white-space: nowrap;
+          z-index: 3;
+          box-shadow: 0 0 20px rgba(0,255,136,0.12);
         }
-        .blink-dot {
-          width: 6px;
-          height: 6px;
+        .badge-dot {
+          width: 7px; height: 7px;
           border-radius: 50%;
           background: var(--green);
           box-shadow: 0 0 8px var(--green);
-          animation: analyzerBlink 1s step-end infinite;
+          animation: badgePulse 1.4s ease-in-out infinite;
         }
-        @keyframes analyzerBlink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.2; }
+        @keyframes badgePulse {
+          0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--green); }
+          50% { opacity: 0.4; box-shadow: 0 0 3px var(--green); }
         }
 
-        .analyzer-body {
+        /* ─── Right Panel ─── */
+        .about-right-panel {
           display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-        .analyzer-row {
-          display: flex;
-          justify-content: space-between;
-          font-size: 12px;
-          letter-spacing: 1px;
-        }
-        .analyzer-row .label { color: var(--text-muted); }
-        .analyzer-row .value { color: var(--green); font-weight: bold; }
-
-        .analyzer-progress-bar {
-          height: 3px;
-          background: rgba(255, 255, 255, 0.05);
-          width: 100%;
-          position: relative;
-          border-radius: 2px;
-        }
-        .analyzer-progress-fill {
-          height: 100%;
-          background: var(--green);
-          box-shadow: 0 0 8px var(--green);
-          width: 0%;
-          transition: width 0.1s linear;
-        }
-
-        .terminal-logs {
-          font-size: 11px;
-          line-height: 1.8;
-          color: var(--text-muted);
-          opacity: 0.75;
-          margin-top: 8px;
-          min-height: 120px;
-        }
-
-        /* Continuous laser sweep animation overlay */
-        .laser-scanning-line {
-          position: absolute;
-          left: 0;
-          width: 100%;
-          height: 2px;
-          background: linear-gradient(90deg, transparent, var(--green), transparent);
-          box-shadow: 0 0 10px var(--green);
-          animation: laserSweep 3.5s infinite linear;
-          opacity: 0.45;
-        }
-        @keyframes laserSweep {
-          0% { top: -5%; }
-          100% { top: 105%; }
-        }
-
-        /* ─── Visual Column (Actual data layout) ─── */
-        .about-visual-col {
           flex-direction: column;
           gap: 0;
-          width: 100%;
+          justify-content: center;
         }
 
-        /* Code block */
+        /* ─── Code Block ─── */
         .code-block {
           background: var(--surface);
           border: 1px solid var(--border);
@@ -395,23 +336,26 @@ export default function About() {
           display: flex; gap: 6px;
         }
 
-        /* Stats */
-        .stats-grid {
-          display: grid; grid-template-columns: 1fr 1fr;
-          gap: 1px; background: var(--border);
+        /* ─── Bio Description ─── */
+        .about-bio {
+          border-left: 2px solid var(--green);
+          padding: 20px 24px;
+          background: var(--surface);
+          margin-top: 2px;
           margin-bottom: 0;
         }
-        .stat-cell {
-          background: var(--dark);
-          padding: 24px 20px;
-          text-align: center;
-          transition: background 0.3s;
+        .bio-text {
+          font-size: 14px;
+          line-height: 1.85;
+          color: var(--text-muted);
+          margin: 0;
         }
-        .stat-cell:hover {
-          background: var(--surface);
+        .bio-highlight {
+          color: var(--text);
+          font-weight: 500;
         }
 
-        /* Download CV Button styling */
+        /* ─── CV Button ─── */
         .cv-btn {
           display: inline-block;
           background: transparent; color: var(--green);
@@ -423,23 +367,25 @@ export default function About() {
           transition: background 0.3s, color 0.3s;
         }
 
-        /* ─── Responsive Adjustments ─── */
+        /* ─── Responsive ─── */
         @media (max-width: 1024px) {
           .about-inner { gap: 48px; }
-          .modern-video-wrapper, .about-right-panel { height: 420px; min-height: 420px; }
+          .about-photo { height: 420px; }
         }
         @media (max-width: 900px) {
           .about-section { padding: 72px 24px 80px; }
-          .about-inner { grid-template-columns: 1fr; gap: 40px; }
+          .about-inner { grid-template-columns: 1fr; gap: 60px; }
           .about-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-          .modern-video-wrapper, .about-right-panel { height: auto; min-height: 0; }
-          .about-visual-col { display: flex !important; opacity: 1 !important; } 
-          .retro-analyzer { display: none !important; } /* Always display direct content on mobile */
+          .about-photo-col { justify-content: center; }
+          .photo-frame-wrapper { max-width: 320px; }
+          .about-photo { height: 380px; }
         }
         @media (max-width: 600px) {
           .about-section { padding: 48px 16px 60px; }
-          .about-inner { gap: 32px; }
+          .about-inner { gap: 40px; }
           .code-block { padding: 20px; }
+          .photo-frame-wrapper { max-width: 280px; }
+          .about-photo { height: 320px; }
         }
       `}</style>
     </section>
