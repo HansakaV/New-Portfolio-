@@ -90,7 +90,7 @@ export const experienceStats = [
 /** Industry / internship experience */
 export const industryExperience = [
   {
-    dateRange: 'Nov 2025 — Jun 2026 · 8 months',
+    dateRange: 'Nov 2025 — Present · 8 months',
     role: 'Associate Software Engineer Intern',
     company: 'Intirx Digital',
     companyUrl: 'https://www.intrixdigital.com/',

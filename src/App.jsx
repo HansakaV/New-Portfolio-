@@ -19,20 +19,22 @@ export default function App() {
       {/* 90s loader sits on top until complete */}
       {!loaded && <Loader onComplete={() => setLoaded(true)} />}
 
-      {/* Main site (rendered in DOM but hidden until loader exits) */}
-      <div style={{ visibility: loaded ? 'visible' : 'hidden' }}>
-        <Cursor />
-        <Navbar />
-        <main>
-          <Hero />
-          <Marquee />
-          <About />
-          <Skills />
-          <Projects />
-          <Contact />
-          <Footer />
-        </main>
-      </div>
+      {/* Main site (mounts and starts animations only after loader completes) */}
+      {loaded && (
+        <div>
+          <Cursor />
+          <Navbar />
+          <main>
+            <Hero />
+            <Marquee />
+            <About />
+            <Skills />
+            <Projects />
+            <Contact />
+            <Footer />
+          </main>
+        </div>
+      )}
     </>
   );
 }

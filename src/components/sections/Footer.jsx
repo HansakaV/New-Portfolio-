@@ -265,6 +265,13 @@ export default function Footer() {
           .ft-made  { display: none; }
           .ft-bottom-inner { justify-content: center; }
         }
+        @media (max-width: 480px) {
+          .ft-copy {
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-align: center;
+          }
+        }
       `}</style>
     </footer>
   );

@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { TextPlugin } from 'gsap/TextPlugin';
 import { Canvas } from '@react-three/fiber';
 import { Float, Sphere, MeshDistortMaterial } from '@react-three/drei';
-import bgVideo from '../../assets/background-video.mp4';
+import bgVideo from '../../assets/bg.mp4';
 import Button from '../ui/Button';
 
 gsap.registerPlugin(TextPlugin);
@@ -34,7 +34,6 @@ export default function Hero() {
   const subtitleRef = useRef(null);
   const ctaRef      = useRef(null);
   const overlayRef  = useRef(null);
-  const taglineRef  = useRef(null);
   const maheshRef   = useRef(null);
   const hansakaRef  = useRef(null);
 
@@ -43,10 +42,6 @@ export default function Hero() {
     tl.fromTo(overlayRef.current,
       { scaleX: 1 },
       { scaleX: 0, duration: 1.4, ease: 'power4.inOut', transformOrigin: 'right' }
-    )
-    .fromTo(taglineRef.current,
-      { opacity: 0, x: -30 },
-      { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out' }, '-=0.5'
     )
     // Type MAHESH
     .to(maheshRef.current, {
@@ -73,7 +68,7 @@ export default function Hero() {
       { opacity: 0, y: 20 },
       { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.2'
     )
-    .fromTo(ctaRef.current.children,
+    .fromTo(ctaRef.current.querySelectorAll('.portfolio-btn'),
       { opacity: 0, y: 20 },
       { opacity: 1, y: 0, duration: 0.6, stagger: 0.15, ease: 'power2.out' }, '-=0.3'
     );
@@ -104,13 +99,6 @@ export default function Hero() {
       {/* Content */}
       <div className="hero-content">
 
-        {/* Tagline */}
-        <div ref={taglineRef} style={{ opacity: 0, marginBottom: 16 }}>
-          <span className="mono highlight" style={{ fontSize: 10, letterSpacing: 4, textTransform: 'uppercase' }}>
-            // Portfolio &amp; Services
-          </span>
-        </div>
-        
         {/* Title — Elegant typewriter system */}
         <div ref={titleRef} className="hero-title">
           <div style={{ display: 'block', overflow: 'hidden' }}>
@@ -163,8 +151,12 @@ export default function Hero() {
 
       <style>{`
         .hero-section {
-          position: relative; height: 100vh;
-          display: flex; align-items: flex-end; overflow: hidden;
+          position: relative;
+          height: 100vh;
+          height: 100dvh;
+          display: flex;
+          align-items: flex-end;
+          overflow: hidden;
         }
         .hero-video {
           position: absolute; inset: 0;
@@ -199,6 +191,8 @@ export default function Hero() {
         .hero-word-line {
           text-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
           position: relative;
+          min-height: 1.15em;
+          display: inline-block;
         }
 
         /* Typewriter Cursor */

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import mePhoto from '../../assets/abou-me.jpeg';
+import { developerInfo } from '../../data/socials';
 import SectionHeader from '../ui/SectionHeader';
 import Button from '../ui/Button';
 
@@ -91,10 +92,10 @@ export default function About() {
       {/* Header */}
       <SectionHeader
         ref={labelRef}
-        label="// about me"
+        label="//about me"
         extra={
           <span className="mono" style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 3 }}>
-            MAHESH HANSAKA — FULL STACK / ML
+             FULL STACK / ML
           </span>
         }
         style={{ opacity: 0 }}
@@ -128,7 +129,7 @@ export default function About() {
             {/* Bottom badge */}
             <div className="photo-badge mono">
               <span className="badge-dot" />
-              AVAILABLE FOR HIRE
+              
             </div>
           </div>
         </div>
@@ -145,7 +146,17 @@ export default function About() {
             </div>
             <div style={{ marginTop: 20 }}>
               {codeLines.map((line, i) => (
-                <p key={i} className="mono" style={{ fontSize: 13, color: line.color, lineHeight: 2, paddingLeft: line.indent * 20 }}>
+                <p 
+                  key={i} 
+                  className="mono code-line" 
+                  style={{ 
+                    fontSize: 13, 
+                    color: line.color, 
+                    lineHeight: 2, 
+                    paddingLeft: `${line.indent * 20}px`,
+                    '--indent': `${line.indent * 20}px` 
+                  }}
+                >
                   {line.text}
                 </p>
               ))}
@@ -167,7 +178,7 @@ export default function About() {
           <div ref={cvRef} style={{ opacity: 0 }}>
             <Button
               as="a"
-              href="/resume.pdf"
+              href={developerInfo.resumeUrl}
               target="_blank"
               variant="accent-outline"
               scaleOnHover
@@ -367,6 +378,10 @@ export default function About() {
           .about-section { padding: 48px 16px 60px; }
           .about-inner { gap: 40px; }
           .code-block { padding: 20px; }
+          .code-line {
+            font-size: 11px !important;
+            padding-left: calc(var(--indent) * 0.6) !important;
+          }
           .photo-frame-wrapper { max-width: 280px; }
           .about-photo { height: 320px; }
         }

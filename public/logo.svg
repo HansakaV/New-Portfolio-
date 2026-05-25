@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <!-- Glowing filtration -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Cybernetic Hexagonal Outer Border -->
+  <polygon points="50,5 92,29 92,71 50,95 8,71 8,29" stroke="#00ff88" stroke-width="3" opacity="0.25" />
+  <polygon points="50,10 87,31 87,69 50,90 13,69 13,31" stroke="#00ff88" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.6" />
+  
+  <!-- Outer Corner Accents with Neon Glow -->
+  <polygon points="50,5 92,29 92,71 50,95 8,71 8,29" stroke="#00ff88" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="15 78" filter="url(#glow)" />
+
+  <!-- Monogram Initials "MH" Cyber-Stylized -->
+  <!-- Left Leg of M / Left Leg of H -->
+  <path d="M 28,68 V 32 L 44,48 L 50,42 L 56,48 L 72,32 V 68" stroke="#00ff88" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+  
+  <!-- H crossbar -->
+  <path d="M 28,50 H 72" stroke="#00ff88" stroke-width="5.5" stroke-linecap="round" filter="url(#glow)" />
+
+  <!-- Micro-Tech Dots -->
+  <circle cx="50" cy="20" r="2.5" fill="#00ff88" filter="url(#glow)" />
+  <circle cx="20" cy="76" r="2.5" fill="#00ff88" opacity="0.8" />
+  <circle cx="80" cy="76" r="2.5" fill="#00ff88" opacity="0.8" />
+</svg>

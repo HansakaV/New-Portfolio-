@@ -86,7 +86,7 @@ export default function Projects() {
 
                 {/* Meta */}
                 <div className="proj-meta">
-                  <p className="mono" style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 2, marginBottom: 8 }}>{proj.year}</p>
+                  <p className="mono proj-year" style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 2, marginBottom: 8 }}>{proj.year}</p>
                   <div className="proj-tags">
                     {proj.tech.map(t => (
                       <span key={t} className="mono" style={{ fontSize: 9, color: 'var(--green)', letterSpacing: 1, border: '1px solid rgba(0,255,136,0.25)', padding: '2px 8px' }}>{t}</span>
@@ -129,8 +129,10 @@ export default function Projects() {
         @media (max-width: 900px) {
           .projects-section { padding: 80px 24px; }
           .proj-year-label { display: none; }
-          .proj-grid { grid-template-columns: 52px 1fr; gap: 16px; }
-          .proj-meta { display: none; }
+          .proj-grid { grid-template-columns: 48px 1fr; gap: 12px; }
+          .proj-meta { text-align: left; margin-top: 8px; grid-column: 2; }
+          .proj-tags { justify-content: flex-start; }
+          .proj-year { margin-bottom: 6px !important; }
         }
 
         /* ── Mobile ── */
@@ -141,6 +143,7 @@ export default function Projects() {
           .proj-cat { display: none; }
           .proj-row { padding: 20px 0; }
           .proj-title-row { gap: 10px; margin-bottom: 6px; }
+          .proj-meta { grid-column: 1; margin-top: 8px; }
         }
       `}</style>
     </section>

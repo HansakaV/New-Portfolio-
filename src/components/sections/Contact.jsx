@@ -31,7 +31,7 @@ export default function Contact() {
         { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out',
           scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' } }
       );
-      gsap.fromTo(formRef.current.children,
+      gsap.fromTo([formRef.current.querySelector('.section-label'), formRef.current.querySelector('.contact-form-container')],
         { y: 40, opacity: 0 },
         { y: 0, opacity: 1, stagger: 0.08, duration: 0.8, ease: 'power2.out',
           scrollTrigger: { trigger: formRef.current, start: 'top 80%' } }

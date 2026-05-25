@@ -67,7 +67,7 @@ export default function Navbar() {
   return (
     <>
       {/* ── Main navbar ── */}
-      <nav ref={navRef} style={{
+      <nav ref={navRef} className="portfolio-navbar" style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '20px 40px',
@@ -183,7 +183,7 @@ export default function Navbar() {
           .desk-links { display: none !important; }
           .desk-cta   { display: none !important; }
           .burger     { display: flex !important; }
-          nav[ref]    { padding: 16px 20px !important; }
+          .portfolio-navbar { padding: 16px 20px !important; }
         }
         @media (min-width: 769px) {
           .desk-links { display: flex !important; }

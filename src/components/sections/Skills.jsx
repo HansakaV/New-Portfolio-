@@ -934,6 +934,14 @@ export default function Skills() {
           .client-logo-img      { width: 96px; height: 44px; }
           .client-marquee-fade  { width: 40px; }
         }
+        @media (max-width: 480px) {
+          .exp-stats            { grid-template-columns: 1fr; }
+          .exp-stat-card        { padding: 24px 20px; }
+          .exp-stat-num         { font-size: 44px !important; }
+          .exp-stat-suffix      { font-size: 28px !important; }
+          .exp-job-top          { flex-direction: column; align-items: flex-start; gap: 8px; }
+          .exp-job-badge        { margin-top: 4px; align-self: flex-start; }
+        }
       `}</style>
     </section>
   );
