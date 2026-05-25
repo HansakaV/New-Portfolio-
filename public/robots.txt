@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://new-portfolio-hasa.vercel.app/sitemap.xml
