@@ -28,7 +28,7 @@ function FloatingSphere() {
   );
 }
 
-export default function Hero() {
+export default function Hero({ startAnimation }) {
   const heroRef     = useRef(null);
   const titleRef    = useRef(null);
   const subtitleRef = useRef(null);
@@ -36,8 +36,25 @@ export default function Hero() {
   const overlayRef  = useRef(null);
   const maheshRef   = useRef(null);
   const hansakaRef  = useRef(null);
+  const bgWrapperRef = useRef(null);
+  const contentWrapperRef = useRef(null);
 
   useEffect(() => {
+    if (!startAnimation) return;
+
+    // 1. Cinematic Background Zoom-Out and Focus Blur Fade
+    gsap.fromTo(bgWrapperRef.current,
+      { scale: 1.25, filter: 'blur(15px) brightness(0.2)' },
+      { scale: 1, filter: 'blur(0px) brightness(1)', duration: 2.4, ease: 'power4.out', delay: 0.1 }
+    );
+
+    // 2. Main Content Zoom-Out and Elegant Fade-In
+    gsap.fromTo(contentWrapperRef.current,
+      { scale: 1.08, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 2.0, ease: 'power3.out', delay: 0.3 }
+    );
+
+    // 3. Horizontal Wipe Reveal and Typewriter Sequence Timeline
     const tl = gsap.timeline({ delay: 0.2 });
     tl.fromTo(overlayRef.current,
       { scaleX: 1 },
@@ -72,32 +89,35 @@ export default function Hero() {
       { opacity: 0, y: 20 },
       { opacity: 1, y: 0, duration: 0.6, stagger: 0.15, ease: 'power2.out' }, '-=0.3'
     );
-  }, []);
+  }, [startAnimation]);
 
   return (
     <section ref={heroRef} id="hero" className="hero-section">
-      {/* Video BG */}
-      <video autoPlay muted loop playsInline className="hero-video">
-        <source src={bgVideo} type="video/mp4" />
-      </video>
+      {/* Background Wrapper for scale and focus zoom animations */}
+      <div ref={bgWrapperRef} className="hero-bg-wrapper">
+        {/* Video BG */}
+        <video autoPlay muted loop playsInline className="hero-video">
+          <source src={bgVideo} type="video/mp4" />
+        </video>
 
-      {/* Dark overlay */}
-      <div className="scanlines hero-overlay" />
+        {/* Dark overlay */}
+        <div className="scanlines hero-overlay" />
 
-      {/* Three.js sphere */}
-      <div className="hero-canvas">
-        <Canvas camera={{ position: [0, 0, 4] }}>
-          <ambientLight intensity={0.2} />
-          <pointLight position={[5, 5, 5]} color="#00ff88" intensity={3} />
-          <FloatingSphere />
-        </Canvas>
+        {/* Three.js sphere */}
+        <div className="hero-canvas">
+          <Canvas camera={{ position: [0, 0, 4] }}>
+            <ambientLight intensity={0.2} />
+            <pointLight position={[5, 5, 5]} color="#00ff88" intensity={3} />
+            <FloatingSphere />
+          </Canvas>
+        </div>
       </div>
 
       {/* Wipe overlay */}
       <div ref={overlayRef} className="hero-wipe" />
 
       {/* Content */}
-      <div className="hero-content">
+      <div ref={contentWrapperRef} className="hero-content">
 
         {/* Title — Elegant typewriter system */}
         <div ref={titleRef} className="hero-title">
@@ -158,6 +178,17 @@ export default function Hero() {
           align-items: flex-end;
           overflow: hidden;
         }
+        .hero-bg-wrapper {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          z-index: 1;
+          pointer-events: none;
+          transform-origin: center center;
+          will-change: transform, filter;
+          transform: scale(1.25);
+          filter: blur(15px) brightness(0.2);
+        }
         .hero-video {
           position: absolute; inset: 0;
           width: 100%; height: 100%; object-fit: cover;
@@ -175,6 +206,9 @@ export default function Hero() {
         .hero-content {
           position: relative; z-index: 5; width: 100%;
           padding: 0 40px 80px;
+          opacity: 0;
+          transform: scale(1.08);
+          will-change: transform, opacity;
         }
         .hero-title {
           font-size: clamp(48px, 9vw, 110px);

@@ -16,25 +16,23 @@ export default function App() {
 
   return (
     <>
-      {/* 90s loader sits on top until complete */}
+      {/* 90s loader sits on top until complete (fully interactive and absolute overlay) */}
       {!loaded && <Loader onComplete={() => setLoaded(true)} />}
 
-      {/* Main site (mounts and starts animations only after loader completes) */}
-      {loaded && (
-        <div>
-          <Cursor />
-          <Navbar />
-          <main>
-            <Hero />
-            <Marquee />
-            <About />
-            <Skills />
-            <Projects />
-            <Contact />
-            <Footer />
-          </main>
-        </div>
-      )}
+      {/* Main site is ALWAYS mounted so that heavy Three.js compiling, shader building, and video rendering happen in the background! */}
+      <div>
+        <Cursor />
+        <Navbar />
+        <main>
+          <Hero startAnimation={loaded} />
+          <Marquee />
+          <About />
+          <Skills />
+          <Projects />
+          <Contact />
+          <Footer />
+        </main>
+      </div>
     </>
   );
 }
