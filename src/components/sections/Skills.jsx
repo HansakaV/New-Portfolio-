@@ -873,13 +873,13 @@ export default function Skills() {
           object-fit: contain;
           object-position: center;
           /* Desaturate by default, colorize on hover */
-          filter: grayscale(1) brightness(1.1);
+          filter: none;
           transition: filter 0.4s ease, transform 0.4s ease;
           user-select: none;
           -webkit-user-drag: none;
         }
         .client-logo-item:hover .client-logo-img {
-          filter: grayscale(0) brightness(1) drop-shadow(0 0 8px rgba(0,255,136,0.35));
+          filter: drop-shadow(0 0 8px rgba(0,255,136,0.35));
           transform: scale(1.05);
         }
 

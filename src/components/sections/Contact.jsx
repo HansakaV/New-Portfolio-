@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { socials, developerInfo } from '../../data/socials';
@@ -13,6 +13,16 @@ export default function Contact() {
   const sectionRef = useRef(null);
   const titleRef   = useRef(null);
   const formRef    = useRef(null);
+
+  // Controlled form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+
+  const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -29,6 +39,55 @@ export default function Contact() {
     }, sectionRef);
     return () => ctx.revert();
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.message) {
+      setStatus('error');
+      return;
+    }
+
+    setStatus('loading');
+
+    try {
+      const response = await fetch(`https://formspree.io/f/${developerInfo.formspreeId || 'mnqeyobd'}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject || 'Portfolio Direct Message',
+          message: formData.message
+        })
+      });
+
+      if (response.ok) {
+        setStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        setStatus('error');
+      }
+    } catch (err) {
+      console.error('Contact Form Error:', err);
+      setStatus('error');
+    }
+  };
 
   return (
     <section id="contact" ref={sectionRef} className="contact-section">
@@ -54,24 +113,78 @@ export default function Contact() {
 
         {/* 2-col grid */}
         <div className="contact-grid">
-          {/* Form */}
+          {/* Form wrapper */}
           <div ref={formRef}>
             <p className="section-label" style={{ marginBottom: 24 }}>Send a message</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <Input type="text" placeholder="Your Name" />
-              <Input type="email" placeholder="Your Email" />
-              <Input type="text" placeholder="Subject" />
-              <Textarea rows={5} placeholder="Your Message" />
-              
-              <Button
-                variant="primary"
-                fullWidth
-                scaleOnHover
-                style={{ padding: '16px' }}
-              >
-                Send Message →
-              </Button>
-            </div>
+            
+            <form onSubmit={handleSubmit} className="contact-form-container">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <Input
+                  type="text"
+                  name="name"
+                  placeholder="Your Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  disabled={status === 'loading'}
+                />
+                
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder="Your Email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  disabled={status === 'loading'}
+                />
+                
+                <Input
+                  type="text"
+                  name="subject"
+                  placeholder="Subject (Optional)"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  disabled={status === 'loading'}
+                />
+                
+                <Textarea
+                  name="message"
+                  rows={5}
+                  placeholder="Your Message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  disabled={status === 'loading'}
+                />
+
+                {/* Cyber Feedback Status Alerts */}
+                {status === 'success' && (
+                  <div className="cyber-alert cyber-alert--success mono">
+                    <span className="alert-pulse-green" />
+                    <span>SECURE PACKETS TRANSMITTED SUCCESSFULLY! WILL RESPOND SHORTLY.</span>
+                  </div>
+                )}
+
+                {status === 'error' && (
+                  <div className="cyber-alert cyber-alert--error mono">
+                    <span className="alert-pulse-red" />
+                    <span>TRANSMISSION FAILED. PLEASE RETRY OR EMAIL DIRECTLY!</span>
+                  </div>
+                )}
+                
+                <Button
+                  type="submit"
+                  variant="primary"
+                  fullWidth
+                  scaleOnHover
+                  style={{ padding: '16px' }}
+                  disabled={status === 'loading'}
+                >
+                  {status === 'loading' ? 'TRANSMITTING PACKETS...' : 'Send Message →'}
+                </Button>
+              </div>
+            </form>
           </div>
 
           {/* Socials + availability */}
@@ -102,6 +215,53 @@ export default function Contact() {
         .contact-section { padding: 120px 40px 80px; background: var(--dark-2); }
         .contact-grid {
           display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+        }
+
+        .contact-form-container {
+          width: 100%;
+        }
+
+        /* Cyber alert boxes */
+        .cyber-alert {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 18px;
+          font-size: 11px;
+          letter-spacing: 1px;
+          border-radius: 2px;
+          margin-top: 8px;
+          border: 1px solid;
+          line-height: 1.5;
+        }
+        .cyber-alert--success {
+          background: rgba(0, 255, 136, 0.04);
+          border-color: var(--green);
+          color: var(--green);
+          box-shadow: 0 0 15px rgba(0, 255, 136, 0.05);
+        }
+        .cyber-alert--error {
+          background: rgba(255, 95, 87, 0.04);
+          border-color: #ff5f57;
+          color: #ff5f57;
+          box-shadow: 0 0 15px rgba(255, 95, 87, 0.05);
+        }
+
+        .alert-pulse-green {
+          width: 6px; height: 6px;
+          border-radius: 50%;
+          background: var(--green);
+          box-shadow: 0 0 8px var(--green);
+          animation: pulse 1.6s infinite;
+          flex-shrink: 0;
+        }
+        .alert-pulse-red {
+          width: 6px; height: 6px;
+          border-radius: 50%;
+          background: #ff5f57;
+          box-shadow: 0 0 8px #ff5f57;
+          animation: pulseRed 1.6s infinite;
+          flex-shrink: 0;
         }
 
         .social-link-row {
@@ -135,7 +295,6 @@ export default function Contact() {
         }
 
         .pulse-dot {
-          width: 8, height: 8;
           border-radius: 50%;
           background: var(--green);
           box-shadow: 0 0 8px var(--green);
@@ -148,6 +307,10 @@ export default function Contact() {
         @keyframes pulse {
           0%,100% { opacity: 1; box-shadow: 0 0 8px var(--green); }
           50%      { opacity: 0.5; box-shadow: 0 0 20px var(--green); }
+        }
+        @keyframes pulseRed {
+          0%,100% { opacity: 1; box-shadow: 0 0 8px #ff5f57; }
+          50%      { opacity: 0.5; box-shadow: 0 0 20px #ff5f57; }
         }
 
         @media (max-width: 900px) {

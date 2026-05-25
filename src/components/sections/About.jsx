@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import mePhoto from '../../assets/me.jpeg';
+import mePhoto from '../../assets/abou-me.jpeg';
 import SectionHeader from '../ui/SectionHeader';
 import Button from '../ui/Button';
 
@@ -53,33 +53,33 @@ export default function About() {
         scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' }
       });
 
-      /* ── Right column: slide in from right ── */
-      gsap.fromTo(rightColRef.current,
-        { x: 60, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.15,
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' } }
-      );
+      /* ── Right column unified staggered entrance timeline ── */
+      const rightTL = gsap.timeline({
+        scrollTrigger: {
+          trigger: rightColRef.current,
+          start: 'top 78%',
+        }
+      });
 
-      /* ── Code block stagger ── */
-      gsap.fromTo(codeRef.current,
-        { y: -20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 68%' } }
-      );
-
-      /* ── Bio description fade-in ── */
-      gsap.fromTo(bioRef.current,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.75, ease: 'power2.out',
-          scrollTrigger: { trigger: bioRef.current, start: 'top 88%' } }
-      );
-
-      /* ── CV button pop ── */
-      gsap.fromTo(cvRef.current,
-        { scale: 0.88, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.55, ease: 'back.out(1.6)',
-          scrollTrigger: { trigger: cvRef.current, start: 'top 92%' } }
-      );
+      rightTL
+        .fromTo(rightColRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.1 }
+        )
+        .fromTo(codeRef.current,
+          { y: 50, opacity: 0, skewY: 2 },
+          { y: 0, opacity: 1, skewY: 0, duration: 0.85, ease: 'power3.out' }
+        )
+        .fromTo(bioRef.current,
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.85, ease: 'power3.out' },
+          '-=0.6'
+        )
+        .fromTo(cvRef.current,
+          { y: 30, opacity: 0, scale: 0.94 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.65, ease: 'back.out(1.5)' },
+          '-=0.5'
+        );
 
     }, sectionRef);
     return () => ctx.revert();
@@ -137,7 +137,7 @@ export default function About() {
         <div ref={rightColRef} className="about-right-panel" style={{ opacity: 0 }}>
 
           {/* Code block */}
-          <div ref={codeRef} className="code-block">
+          <div ref={codeRef} className="code-block" style={{ opacity: 0 }}>
             <div className="code-dots">
               {['#ff5f57','#ffbd2e','#28c840'].map(c => (
                 <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c }} />
@@ -155,10 +155,8 @@ export default function About() {
           </div>
 
           {/* Bio description */}
-          <span></span>
           <div ref={bioRef} className="about-bio" style={{ opacity: 0 }}>
             <p className="bio-text">
-
               I'm a <span className="bio-highlight">Full Stack Developer & ML enthusiast</span> based in Sri Lanka,
               passionate about crafting performant, production-grade applications that sit at the intersection
               of clean engineering and thoughtful design.
@@ -166,7 +164,7 @@ export default function About() {
           </div>
 
           {/* Download CV button */}
-          <div ref={cvRef} style={{ marginTop: 24, opacity: 0 }}>
+          <div ref={cvRef} style={{ opacity: 0 }}>
             <Button
               as="a"
               href="/resume.pdf"
@@ -320,7 +318,7 @@ export default function About() {
         .about-right-panel {
           display: flex;
           flex-direction: column;
-          gap: 0;
+          gap: 28px;
           justify-content: center;
         }
 
@@ -331,7 +329,6 @@ export default function About() {
           padding: 32px;
           position: relative;
           overflow: hidden;
-          margin-bottom: 2px;
         }
         .code-dots {
           display: flex; gap: 6px;
@@ -342,8 +339,6 @@ export default function About() {
           border-left: 2px solid var(--green);
           padding: 20px 24px;
           background: var(--surface);
-          margin-top: 2px;
-          margin-bottom: 0;
         }
         .bio-text {
           font-size: 14px;
