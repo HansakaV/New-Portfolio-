@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import mePhoto from '../assets/me.jpeg';
+import mePhoto from '../../assets/me.jpeg';
+import SectionHeader from '../ui/SectionHeader';
+import Button from '../ui/Button';
 
 gsap.registerPlugin(ScrollTrigger);
-
-
 
 const codeLines = [
   { indent: 0, text: 'const mahesh = {',                       color: 'var(--text)'       },
@@ -89,12 +89,16 @@ export default function About() {
     <section id="about" ref={sectionRef} className="about-section">
 
       {/* Header */}
-      <div ref={labelRef} className="about-header" style={{ opacity: 0 }}>
-        <p className="section-label">// about me</p>
-        <span className="mono" style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 3 }}>
-          MAHESH HANSAKA — FULL STACK / ML
-        </span>
-      </div>
+      <SectionHeader
+        ref={labelRef}
+        label="// about me"
+        extra={
+          <span className="mono" style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 3 }}>
+            MAHESH HANSAKA — FULL STACK / ML
+          </span>
+        }
+        style={{ opacity: 0 }}
+      />
 
       <div className="about-inner">
 
@@ -151,26 +155,27 @@ export default function About() {
           </div>
 
           {/* Bio description */}
+          <span></span>
           <div ref={bioRef} className="about-bio" style={{ opacity: 0 }}>
             <p className="bio-text">
+
               I'm a <span className="bio-highlight">Full Stack Developer & ML enthusiast</span> based in Sri Lanka,
               passionate about crafting performant, production-grade applications that sit at the intersection
               of clean engineering and thoughtful design.
-            </p>
-            <p className="bio-text" style={{ marginTop: 12 }}>
-              With hands-on experience across <span className="bio-highlight">React, Node.js, Python &amp; AWS</span>,
-              I build everything from scalable REST APIs to intelligent ML pipelines — always with an eye for
-              detail and a drive to ship code that actually matters.
             </p>
           </div>
 
           {/* Download CV button */}
           <div ref={cvRef} style={{ marginTop: 24, opacity: 0 }}>
-            <a href="/resume.pdf" target="_blank" className="cv-btn"
-              onMouseEnter={e => { e.target.style.background = 'var(--green)'; e.target.style.color = 'var(--dark)'; }}
-              onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = 'var(--green)'; }}>
+            <Button
+              as="a"
+              href="/resume.pdf"
+              target="_blank"
+              variant="accent-outline"
+              scaleOnHover
+            >
               Download CV ↓
-            </a>
+            </Button>
           </div>
 
         </div>
@@ -182,10 +187,6 @@ export default function About() {
         .about-section {
           padding: 100px 40px 120px;
           background: var(--dark);
-        }
-        .about-header {
-          max-width: 1200px; margin: 0 auto 48px;
-          display: flex; align-items: center; justify-content: space-between;
         }
 
         /* ─── Grid ─── */
@@ -355,18 +356,6 @@ export default function About() {
           font-weight: 500;
         }
 
-        /* ─── CV Button ─── */
-        .cv-btn {
-          display: inline-block;
-          background: transparent; color: var(--green);
-          border: 1px solid var(--green);
-          padding: 12px 28px;
-          font-family: 'Space Mono', monospace;
-          font-size: 11px; letter-spacing: 2px;
-          text-transform: uppercase; text-decoration: none;
-          transition: background 0.3s, color 0.3s;
-        }
-
         /* ─── Responsive ─── */
         @media (max-width: 1024px) {
           .about-inner { gap: 48px; }
@@ -375,7 +364,6 @@ export default function About() {
         @media (max-width: 900px) {
           .about-section { padding: 72px 24px 80px; }
           .about-inner { grid-template-columns: 1fr; gap: 60px; }
-          .about-header { flex-direction: column; align-items: flex-start; gap: 8px; }
           .about-photo-col { justify-content: center; }
           .photo-frame-wrapper { max-width: 320px; }
           .about-photo { height: 380px; }

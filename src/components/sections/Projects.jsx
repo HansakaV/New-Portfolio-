@@ -1,35 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { projects } from '../../data/projects';
+import SectionHeader from '../ui/SectionHeader';
+import Button from '../ui/Button';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const projects = [
-  {
-    id: '01', title: 'NEXUS PLATFORM', category: 'Full Stack App',
-    tech: ['React', 'Node.js', 'PostgreSQL', 'AWS'],
-    desc: 'Enterprise SaaS platform with real-time collaboration, role-based access, and scalable microservices architecture.',
-    year: '2024',
-  },
-  {
-    id: '02', title: 'VOID COMMERCE', category: 'E-Commerce',
-    tech: ['Next.js', 'Stripe', 'MongoDB', 'Redis'],
-    desc: 'High-performance e-commerce system handling 50k+ concurrent users with sub-100ms response times.',
-    year: '2024',
-  },
-  {
-    id: '03', title: 'NEURAL DASH', category: 'Data Dashboard',
-    tech: ['React', 'D3.js', 'Python', 'FastAPI'],
-    desc: 'AI-powered analytics dashboard with real-time data visualization and predictive modeling.',
-    year: '2023',
-  },
-  {
-    id: '04', title: 'CIPHER CHAT', category: 'Real-time App',
-    tech: ['Socket.io', 'WebRTC', 'React', 'Node.js'],
-    desc: 'End-to-end encrypted messaging app with video calls, file sharing, and P2P architecture.',
-    year: '2023',
-  },
-];
 
 export default function Projects() {
   const sectionRef = useRef(null);
@@ -72,23 +48,26 @@ export default function Projects() {
     <section id="projects" ref={sectionRef} className="projects-section">
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         {/* Header */}
-        <div ref={titleRef} className="projects-header">
-          <div>
-            <p className="section-label" style={{ marginBottom: 12 }}>// selected work</p>
-            <h2 className="display" style={{ fontSize: 'clamp(40px, 6vw, 80px)', lineHeight: 0.95 }}>
-              PROJECTS<br /><span style={{ color: 'var(--green)' }}>THAT SHIP</span>
-            </h2>
-          </div>
-          <span className="mono proj-year-label" style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: 2 }}>2023 — 2024</span>
-        </div>
+        <SectionHeader
+          ref={titleRef}
+          label="// selected work"
+          title="PROJECTS"
+          highlight="THAT SHIP"
+          extra={
+            <span className="mono proj-year-label" style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: 2 }}>
+              2023 — 2024
+            </span>
+          }
+          style={{ opacity: 0 }}
+        />
 
         {/* Project rows */}
         <div ref={listRef}>
           {projects.map((proj, i) => (
             <div key={proj.id}
-              className="hover-target proj-row"
-              onMouseEnter={() => handleHover(i, true)}
-              onMouseLeave={() => handleHover(i, false)}>
+               className="hover-target proj-row"
+               onMouseEnter={() => handleHover(i, true)}
+               onMouseLeave={() => handleHover(i, false)}>
               {/* Accent bar */}
               <div className="proj-bar" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 1, background: 'var(--green)', transformOrigin: 'left', transform: 'scaleX(0)' }} />
 
@@ -121,25 +100,14 @@ export default function Projects() {
 
         {/* CTA */}
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: 40, textAlign: 'center' }}>
-          <button style={{
-            background: 'transparent', border: '1px solid var(--border)',
-            color: 'var(--text-muted)', padding: '14px 40px',
-            fontFamily: 'Space Mono', fontSize: 11, letterSpacing: 2,
-            textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.3s',
-          }}
-            onMouseEnter={e => { e.target.style.borderColor = 'var(--green)'; e.target.style.color = 'var(--green)'; }}
-            onMouseLeave={e => { e.target.style.borderColor = 'var(--border)'; e.target.style.color = 'var(--text-muted)'; }}>
+          <Button variant="outline" scaleOnHover style={{color:'var(--green)'}} onClick={() => window.open('https://github.com/HansakaV?tab=repositories', '_blank')}>
             View All Projects
-          </button>
+          </Button>
         </div>
       </div>
 
       <style>{`
         .projects-section { padding: 120px 40px; background: var(--dark-2); }
-        .projects-header {
-          display: flex; align-items: flex-end;
-          justify-content: space-between; margin-bottom: 60px;
-        }
         .proj-row {
           position: relative; border-top: 1px solid var(--border);
           padding: 32px 0; cursor: pointer; overflow: hidden;
@@ -168,7 +136,6 @@ export default function Projects() {
         /* ── Mobile ── */
         @media (max-width: 600px) {
           .projects-section { padding: 60px 16px; }
-          .projects-header { flex-direction: column; gap: 12px; align-items: flex-start; margin-bottom: 32px; }
           .proj-grid { grid-template-columns: 1fr; gap: 10px; }
           .proj-num { display: none; }
           .proj-cat { display: none; }

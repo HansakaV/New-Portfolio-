@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import Loader from './components/Loader';
-import Cursor from './components/Cursor';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Marquee from './components/Marquee';
-import About from './components/About';
-import Projects from './components/Projects';
-import Skills from './components/Skills';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
+import Loader from './components/common/Loader';
+import Cursor from './components/common/Cursor';
+import Navbar from './components/sections/Navbar';
+import Hero from './components/sections/Hero';
+import Marquee from './components/sections/Marquee';
+import About from './components/sections/About';
+import Projects from './components/sections/Projects';
+import Skills from './components/sections/Skills';
+import Contact from './components/sections/Contact';
+import Footer from './components/sections/Footer';
 import './index.css';
 
 export default function App() {
@@ -27,8 +27,8 @@ export default function App() {
           <Hero />
           <Marquee />
           <About />
-          <Projects />
           <Skills />
+          <Projects />
           <Contact />
           <Footer />
         </main>

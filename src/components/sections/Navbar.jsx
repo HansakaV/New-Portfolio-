@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import Button from '../ui/Button';
 
 export default function Navbar() {
   const navRef      = useRef(null);
@@ -120,15 +121,14 @@ export default function Navbar() {
           </button>
 
           {/* CTA – desktop */}
-          <button className="desk-cta" onClick={() => scrollTo('contact')} style={{
-            background: 'transparent', border: '1px solid var(--green)', color: 'var(--green)',
-            padding: '8px 20px', fontFamily: 'Space Mono', fontSize: 11, letterSpacing: 2,
-            textTransform: 'uppercase', cursor: 'pointer', transition: 'background 0.3s, color 0.3s',
-          }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'var(--green)'; e.currentTarget.style.color = 'var(--dark)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--green)'; }}>
+          <Button
+            className="desk-cta"
+            variant="accent-outline"
+            onClick={() => scrollTo('contact')}
+            style={{ padding: '8px 20px' }}
+          >
             Hire Me
-          </button>
+          </Button>
 
           {/* Burger – mobile */}
           <button className="burger" onClick={() => setMenuOpen(o => !o)}
@@ -165,14 +165,15 @@ export default function Navbar() {
               {id}
             </button>
           ))}
-          <button className="mob-item" onClick={() => scrollTo('contact')} style={{
-            background: 'var(--green)', color: 'var(--dark)', border: 'none',
-            padding: '14px 40px', fontFamily: 'Space Mono', fontSize: 13,
-            letterSpacing: 2, textTransform: 'uppercase', fontWeight: 700,
-            marginTop: 12, cursor: 'pointer', minWidth: 200,
-          }}>
+          <Button
+            className="mob-item"
+            variant="primary"
+            scaleOnHover
+            onClick={() => scrollTo('contact')}
+            style={{ marginTop: 12, minWidth: 200, padding: '14px 40px' }}
+          >
             Hire Me
-          </button>
+          </Button>
         </div>
       )}
 
@@ -186,7 +187,7 @@ export default function Navbar() {
         }
         @media (min-width: 769px) {
           .desk-links { display: flex !important; }
-          .desk-cta   { display: block !important; }
+          .desk-cta   { display: inline-flex !important; }
           .burger     { display: none !important; }
         }
       `}</style>

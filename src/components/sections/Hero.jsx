@@ -1,8 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { TextPlugin } from 'gsap/TextPlugin';
 import { Canvas } from '@react-three/fiber';
 import { Float, Sphere, MeshDistortMaterial } from '@react-three/drei';
-import bgVideo from '../assets/background-video.mp4';
+import bgVideo from '../../assets/background-video.mp4';
+import Button from '../ui/Button';
+
+gsap.registerPlugin(TextPlugin);
 
 function FloatingSphere() {
   return (
@@ -31,6 +35,8 @@ export default function Hero() {
   const ctaRef      = useRef(null);
   const overlayRef  = useRef(null);
   const taglineRef  = useRef(null);
+  const maheshRef   = useRef(null);
+  const hansakaRef  = useRef(null);
 
   useEffect(() => {
     const tl = gsap.timeline({ delay: 0.2 });
@@ -38,29 +44,39 @@ export default function Hero() {
       { scaleX: 1 },
       { scaleX: 0, duration: 1.4, ease: 'power4.inOut', transformOrigin: 'right' }
     )
-    .fromTo(titleRef.current.children,
-      { y: 120, opacity: 0, skewY: 6 },
-      { y: 0, opacity: 1, skewY: 0, duration: 1.1, ease: 'power3.out', stagger: 0.08 }, '-=0.6'
-    )
     .fromTo(taglineRef.current,
       { opacity: 0, x: -30 },
-      { opacity: 1, x: 0, duration: 0.8, ease: 'power2.out' }, '-=0.5'
+      { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out' }, '-=0.5'
     )
+    // Type MAHESH
+    .to(maheshRef.current, {
+      text: "MAHESH",
+      duration: 0.8,
+      ease: "none",
+      onComplete: () => {
+        if (maheshRef.current) maheshRef.current.classList.add('typing-finished');
+      }
+    })
+    // Type HANSAKA
+    .to(hansakaRef.current, {
+      text: "HANSAKA",
+      duration: 0.9,
+      ease: "none",
+      onStart: () => {
+        if (hansakaRef.current) hansakaRef.current.classList.add('typing-active');
+      },
+      onComplete: () => {
+        if (hansakaRef.current) hansakaRef.current.classList.add('typing-finished');
+      }
+    }, "+=0.15")
     .fromTo(subtitleRef.current,
       { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.5'
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.2'
     )
     .fromTo(ctaRef.current.children,
       { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.6, stagger: 0.15, ease: 'power2.out' }, '-=0.4'
+      { opacity: 1, y: 0, duration: 0.6, stagger: 0.15, ease: 'power2.out' }, '-=0.3'
     );
-
-    const handleScroll = () => {
-      const y = window.scrollY;
-      if (titleRef.current) gsap.set(titleRef.current, { y: y * 0.25 });
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -87,16 +103,22 @@ export default function Hero() {
 
       {/* Content */}
       <div className="hero-content">
-      
-        {/* Title */}
+
+        {/* Tagline */}
+        <div ref={taglineRef} style={{ opacity: 0, marginBottom: 16 }}>
+          <span className="mono highlight" style={{ fontSize: 10, letterSpacing: 4, textTransform: 'uppercase' }}>
+            // Portfolio &amp; Services
+          </span>
+        </div>
+        
+        {/* Title — Elegant typewriter system */}
         <div ref={titleRef} className="hero-title">
-          {['MAHESH', 'HANSAKA'].map((word, i) => (
-            <div key={i} style={{ display: 'block', overflow: 'hidden' }}>
-              <span className={i === 1 ? 'glitch' : ''} data-text={word} style={{ display: 'inline-block' }}>
-                {word}
-              </span>
-            </div>
-          ))}
+          <div style={{ display: 'block', overflow: 'hidden' }}>
+            <span ref={maheshRef} className="hero-word-line hero-word-1" style={{ display: 'inline-block' }}></span>
+          </div>
+          <div style={{ display: 'block', overflow: 'hidden' }}>
+            <span ref={hansakaRef} className="hero-word-line hero-word-2" style={{ display: 'inline-block' }}></span>
+          </div>
         </div>
 
         {/* Sub row */}
@@ -107,18 +129,21 @@ export default function Hero() {
             </p>
           </div>
           <div ref={ctaRef} className="hero-cta-group">
-            <button className="btn-primary" style={{ opacity: 0 }}
+            <Button
+              variant="primary"
+              scaleOnHover
+              style={{ opacity: 0 }}
               onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-              onMouseEnter={e => gsap.to(e.target, { scale: 1.05, duration: 0.2 })}
-              onMouseLeave={e => gsap.to(e.target, { scale: 1, duration: 0.2 })}>
+            >
               View Work
-            </button>
-            <button className="btn-secondary" style={{ opacity: 0 }}
+            </Button>
+            <Button
+              variant="secondary"
+              style={{ opacity: 0 }}
               onClick={() => window.open('mailto:mahesh.hansaka@gmail.com')}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--green)'; e.currentTarget.style.color = 'var(--green)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text)'; }}>
+            >
               Get In Touch
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -159,28 +184,58 @@ export default function Hero() {
           position: relative; z-index: 5; width: 100%;
           padding: 0 40px 80px;
         }
-        .hero-tagline {
-          position: absolute; left: 0; bottom: calc(100% + 20px);
+        .hero-title {
+          font-size: clamp(48px, 9vw, 110px);
+          font-weight: 900; line-height: 1.05;
+          letter-spacing: 2px; color: var(--text);
+          margin-bottom: 24px;
         }
+        .hero-title div {
+          margin-bottom: 12px;
+        }
+        .hero-title div:last-child {
+          margin-bottom: 0;
+        }
+        .hero-word-line {
+          text-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
+          position: relative;
+        }
+
+        /* Typewriter Cursor */
+        .hero-word-line::after {
+          content: '_';
+          color: var(--green);
+          font-weight: 300;
+          margin-left: 4px;
+          animation: cursorBlink 0.8s step-end infinite;
+          opacity: 1;
+        }
+        /* Show/hide cursor selectively */
+        .hero-word-1.typing-finished::after {
+          display: none;
+        }
+        .hero-word-2::after {
+          display: none;
+        }
+        .hero-word-2.typing-active::after {
+          display: inline-block;
+        }
+        .hero-word-2.typing-finished::after {
+          animation: cursorBlink 1.4s step-end infinite; /* Slower final breathing blink */
+          display: inline-block;
+        }
+
+        @keyframes cursorBlink {
+          0%, 100% { opacity: 0; }
+          50% { opacity: 1; }
+        }
+
         .hero-sub-row {
           display: flex; align-items: flex-end;
           justify-content: space-between; margin-top: 16px; gap: 32px;
         }
         .hero-cta-group {
           display: flex; gap: 14px; align-items: center; flex-shrink: 0;
-        }
-        .btn-primary {
-          background: var(--green); color: var(--dark); border: none;
-          padding: 14px 28px; font-family: 'Space Mono', monospace;
-          font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-          font-weight: 700; cursor: pointer;
-        }
-        .btn-secondary {
-          background: transparent; color: var(--text);
-          border: 1px solid var(--border);
-          padding: 14px 28px; font-family: 'Space Mono', monospace;
-          font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-          cursor: pointer; transition: border-color 0.3s, color 0.3s;
         }
         .scroll-indicator {
           position: absolute; right: 40px; bottom: 80px;
@@ -197,21 +252,56 @@ export default function Hero() {
         /* ── Tablet ── */
         @media (max-width: 900px) {
           .hero-content { padding: 0 24px 60px; }
-          .hero-tagline { left: 0; }
           .hero-sub-row { flex-direction: column; align-items: flex-start; gap: 24px; margin-top: 20px; }
           .hero-cta-group { flex-wrap: wrap; }
           .scroll-indicator { right: 24px; bottom: 60px; }
           .hero-credit { left: 24px; }
         }
 
-        /* ── Mobile ── */
+        /* ── Mobile (Centered content layout) ── */
         @media (max-width: 600px) {
-          .hero-content { padding: 0 16px 40px; }
-          .hero-sub-row { gap: 20px; margin-top: 16px; }
-          .hero-cta-group { gap: 10px; }
-          .btn-primary, .btn-secondary { padding: 12px 20px; font-size: 10px; }
+          .hero-section {
+            align-items: center;
+          }
+          .hero-content {
+            padding: 80px 16px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+          }
+          .hero-title {
+            text-align: center;
+            font-size: clamp(38px, 11vw, 48px);
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+          }
+          .hero-title div {
+            margin-bottom: 6px;
+          }
+          .hero-word-line {
+            display: block !important;
+            width: 100%;
+          }
+          .hero-sub-row {
+            gap: 24px;
+            margin-top: 0;
+            width: 100%;
+            align-items: center;
+            text-align: center;
+          }
+          .hero-sub-row p {
+            margin: 0 auto;
+            max-width: 100% !important;
+          }
+          .hero-cta-group {
+            width: 100%;
+            justify-content: center;
+            gap: 12px;
+          }
           .scroll-indicator { display: none; }
-          .hero-credit { left: 16px; bottom: 12px; }
+          .hero-credit { left: 50%; transform: translateX(-50%); bottom: 16px; }
         }
       `}</style>
     </section>

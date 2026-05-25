@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 
 /* ─────────────────────────────────────────
    Classic 90s DOS / Windows-era Loader
-───────────────────────────────────────── */
+ ───────────────────────────────────────── */
 
 const TOTAL_SEGS = 32;   // number of progress-bar blocks
 const DURATION   = 2800; // total ms for progress to reach 100
@@ -138,8 +138,8 @@ export default function Loader({ onComplete }) {
 
           {/* System info lines */}
           <div style={{ marginBottom: 18, color: '#007a30', fontSize: 10, lineHeight: 2, letterSpacing: 1 }}>
-            <div>C:\PORTFOLIO\&gt; mahesh.exe --load-all</div>
-            <div>C:\PORTFOLIO\&gt; <span style={{ color: '#00ff55' }}>PORTFOLIO OS 2024 [Version 4.0.1]</span></div>
+            <div>C:\\PORTFOLIO\\&gt; mahesh.exe --load-all</div>
+            <div>C:\\PORTFOLIO\\&gt; <span style={{ color: '#00ff55' }}>PORTFOLIO OS 2024 [Version 4.0.1]</span></div>
             <div style={{ color: '#004f20' }}>(C) Copyright Mahesh Hansaka Corporation.</div>
           </div>
 
@@ -182,7 +182,7 @@ export default function Loader({ onComplete }) {
             display: 'flex', justifyContent: 'space-between',
           }}>
             <span>MEM: 640K OK</span>
-            <span>DISK: C:\</span>
+            <span>DISK: C:\\</span>
             <span style={{ color: done ? '#00ff55' : '#007a30' }}>
               {done ? '[ READY ]' : '[ LOADING ]'}
             </span>
