@@ -40,6 +40,10 @@ export default function Hero({ startAnimation }) {
   const contentWrapperRef = useRef(null);
 
   useEffect(() => {
+    // Immediately clear static text for animation so there's no visual flash
+    if (maheshRef.current) gsap.set(maheshRef.current, { text: "" });
+    if (hansakaRef.current) gsap.set(hansakaRef.current, { text: "" });
+
     if (!startAnimation) return;
 
     // 1. Cinematic Background Zoom-Out and Focus Blur Fade
@@ -120,14 +124,14 @@ export default function Hero({ startAnimation }) {
       <div ref={contentWrapperRef} className="hero-content">
 
         {/* Title — Elegant typewriter system */}
-        <div ref={titleRef} className="hero-title">
+        <h1 ref={titleRef} className="hero-title">
           <div style={{ display: 'block', overflow: 'hidden' }}>
-            <span ref={maheshRef} className="hero-word-line hero-word-1" style={{ display: 'inline-block' }}></span>
+            <span ref={maheshRef} className="hero-word-line hero-word-1" style={{ display: 'inline-block' }}>MAHESH</span>
           </div>
           <div style={{ display: 'block', overflow: 'hidden' }}>
-            <span ref={hansakaRef} className="hero-word-line hero-word-2" style={{ display: 'inline-block' }}></span>
+            <span ref={hansakaRef} className="hero-word-line hero-word-2" style={{ display: 'inline-block' }}>HANSAKA</span>
           </div>
-        </div>
+        </h1>
 
         {/* Sub row */}
         <div className="hero-sub-row">
