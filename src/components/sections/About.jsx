@@ -12,7 +12,7 @@ const codeLines = [
   { indent: 0, text: 'const mahesh = {',                       color: 'var(--text)'       },
   { indent: 1, text: 'role: "Full Stack Dev",',                color: 'var(--text-muted)' },
   { indent: 1, text: 'passion: "Clean Code",',                 color: 'var(--text-muted)' },
-  { indent: 1, text: 'stack: [React, Node, Python, AWS],',     color: 'var(--text-muted)' },
+  { indent: 1, text: 'stack: [React, Node, Python, Java, DevOps],',     color: 'var(--text-muted)' },
   { indent: 1, text: 'available: true,',                       color: 'var(--green)'      },
   { indent: 0, text: '};',                                     color: 'var(--text)'       },
 ];

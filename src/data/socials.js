@@ -7,6 +7,6 @@ export const developerInfo = {
   name: 'MAHESH HANSAKA',
   email: 'maheshhansaka628@gmail.com',
   role: 'FULL STACK DEVELOPER / ML',
-  resumeUrl: '/resume.pdf',
+  resumeUrl: '/mahesh_hansaka_resume_.pdf',
   formspreeId: 'mdajljno', 
 };
